@@ -1,12 +1,12 @@
 [submodule "Adafruit_LED_Backpack"]
-	path = Adafruit_LED_Backpack
+	path = lib/Adafruit_LED_Backpack
 	url = git@github.com:adafruit/Adafruit_LED_Backpack.git
 [submodule "Adafruit-GFX-Library"]
-	path = Adafruit-GFX-Library
+	path = lib/Adafruit-GFX-Library
 	url = git@github.com:adafruit/Adafruit-GFX-Library.git
 [submodule "ArduinoJson"]
 	path = lib/ArduinoJson
 	url = git@github.com:bblanchon/ArduinoJson.git
 [submodule "arduino-youtube-api"]
-	path = arduino-youtube-api
+	path = lib/arduino-youtube-api
 	url = git@github.com:witnessmenow/arduino-youtube-api.git
