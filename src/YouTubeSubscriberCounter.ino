@@ -11,11 +11,10 @@
 
 // requires the following libraries, search in Library Manager or download from github):
 #include <Wire.h>                  // installed by default
-#include <Adafruit-GFX-Library/Adafruit_GFX.h>          // https://github.com/adafruit/Adafruit-GFX-Library
-#include "Adafruit_LED_Backpack/Adafruit_LEDBackpack.h"  // https://github.com/adafruit/Adafruit_LED_Backpack
-#include <arduino-youtube-api/YoutubeApi.h>            // https://github.com/witnessmenow/arduino-youtube-api
-#include <ArduinoJson/src/ArduinoJson.h>           // https://github.com/bblanchon/ArduinoJson
-
+#include <Adafruit_GFX.h>          // https://github.com/adafruit/Adafruit-GFX-Library
+#include "Adafruit_LEDBackpack.h"  // https://github.com/adafruit/Adafruit_LED_Backpack
+#include <YoutubeApi.h>            // https://github.com/witnessmenow/arduino-youtube-api
+#include <ArduinoJson.h>           // https://github.com/bblanchon/ArduinoJson
 
 #include <ESP8266WiFi.h>
 #include <WiFiClientSecure.h>
