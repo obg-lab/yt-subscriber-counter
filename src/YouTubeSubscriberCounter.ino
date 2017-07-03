@@ -11,10 +11,10 @@
 
 // requires the following libraries, search in Library Manager or download from github):
 #include <Wire.h>                  // installed by default
-#include <Adafruit_GFX.h>          // https://github.com/adafruit/Adafruit-GFX-Library
-#include "Adafruit_LEDBackpack.h"  // https://github.com/adafruit/Adafruit_LED_Backpack
-#include <YoutubeApi.h>            // https://github.com/witnessmenow/arduino-youtube-api
-#include <ArduinoJson.h>           // https://github.com/bblanchon/ArduinoJson
+#include <Adafruit-GFX-Library/Adafruit_GFX.h>          // https://github.com/adafruit/Adafruit-GFX-Library
+#include "Adafruit_LED_Backpack/Adafruit_LEDBackpack.h"  // https://github.com/adafruit/Adafruit_LED_Backpack
+#include <arduino-youtube-api/YoutubeApi.h>            // https://github.com/witnessmenow/arduino-youtube-api
+#include <ArduinoJson/src/ArduinoJson.h>           // https://github.com/bblanchon/ArduinoJson
 
 
 #include <ESP8266WiFi.h>
@@ -46,7 +46,7 @@ void setup() {
 
   Serial.begin(115200);
   matrix.begin(0x70);
-  
+
   // Set WiFi to station mode and disconnect from an AP if it was Previously
   // connected
   WiFi.mode(WIFI_STA);
@@ -88,7 +88,7 @@ void loop() {
       //Serial.print("hiddenSubscriberCount: ");
       //Serial.println(api.channelStats.hiddenSubscriberCount);
       Serial.println("------------------------");
-      
+
       matrix.print(api.channelStats.subscriberCount, DEC);
       matrix.writeDisplay();
     }
