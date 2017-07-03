@@ -5,7 +5,7 @@
 	path = Adafruit-GFX-Library
 	url = git@github.com:adafruit/Adafruit-GFX-Library.git
 [submodule "ArduinoJson"]
-	path = ArduinoJson
+	path = lib/ArduinoJson
 	url = git@github.com:bblanchon/ArduinoJson.git
 [submodule "arduino-youtube-api"]
 	path = arduino-youtube-api
