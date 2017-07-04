@@ -11,27 +11,21 @@
 
 // requires the following libraries, search in Library Manager or download from github):
 #include <Wire.h>                  // installed by default
-#include <Adafruit_GFX.h>          // https://github.com/adafruit/Adafruit-GFX-Library
-#include "Adafruit_LEDBackpack.h"  // https://github.com/adafruit/Adafruit_LED_Backpack
 #include <YoutubeApi.h>            // https://github.com/witnessmenow/arduino-youtube-api
 #include <ArduinoJson.h>           // https://github.com/bblanchon/ArduinoJson
+#include <stdlib.h>
+
+#include "LedControl.h"
 
 #include <ESP8266WiFi.h>
 #include <WiFiClientSecure.h>
 
-//------- Replace the following! ------
-char ssid[] = "your wifi network name"; // your network SSID (name)
-char password[] = "yourwifipassword";   // your network password
+#include "config.h"
 
-// google API key
-// create yours: https://support.google.com/cloud/answer/6158862?hl=en
-#define API_KEY "yourAPIkeyhere"
+#define DISPLAYDIGITS 8
 
-// youtube channel ID
-// find yours: https://support.google.com/youtube/answer/3250431?hl=en
-#define CHANNEL_ID "yourchannelIDhere"
-
-Adafruit_7segment matrix = Adafruit_7segment();
+// EasyESP or NodeMCU Pin D8 to DIN, D7 to Clk, D6 to LOAD, no.of devices is 1
+LedControl lc=LedControl(D8,D7,D6,1);
 
 WiFiClientSecure client;
 YoutubeApi api(API_KEY, client);
@@ -43,8 +37,12 @@ long subs = 0;
 
 void setup() {
 
-  Serial.begin(115200);
-  matrix.begin(0x70);
+  Serial.begin(9600);
+
+  // Initialize the MAX7219 device
+  lc.shutdown(0,false);   // Enable display
+  lc.setIntensity(0,15);  // Set brightness level (0 is min, 15 is max)
+  lc.clearDisplay(0);     // Clear display register
 
   // Set WiFi to station mode and disconnect from an AP if it was Previously
   // connected
@@ -70,10 +68,12 @@ void setup() {
 }
 
 void loop() {
+  char buffer[10];
 
   if (millis() > api_lasttime + api_mtbs)  {
-    if(api.getChannelStatistics(CHANNEL_ID))
-    {
+
+    if(api.getChannelStatistics(CHANNEL_ID)) {
+
       Serial.println("---------Stats---------");
       Serial.print("Subscriber Count: ");
       Serial.println(api.channelStats.subscriberCount);
@@ -84,13 +84,49 @@ void loop() {
       Serial.print("Video Count: ");
       Serial.println(api.channelStats.videoCount);
       // Probably not needed :)
-      //Serial.print("hiddenSubscriberCount: ");
-      //Serial.println(api.channelStats.hiddenSubscriberCount);
+      Serial.print("hiddenSubscriberCount: ");
+      Serial.println(api.channelStats.hiddenSubscriberCount);
       Serial.println("------------------------");
 
-      matrix.print(api.channelStats.subscriberCount, DEC);
-      matrix.writeDisplay();
+      ConvertNumberToString(api.channelStats.subscriberCount, 0, buffer);
+      delay(2000);
     }
     api_lasttime = millis();
+  }
+}
+
+/*****
+  https://forum.arduino.cc/index.php?topic=225326.0
+  This function converts a number to a string representation and then displays
+  it on the LED array. THe output is right-justified on the display.
+
+  Parameter List:
+    float val                  the number to be converted
+    unsigned char precision    the number of digits after the decimal point
+    char *buffer               a character array. It is assumed to be large
+                               enough to hold the number represented as an
+                               ASCII number plus the null.
+  Return value:
+    void
+*****/
+void ConvertNumberToString(float val, unsigned char precision, char *buffer)
+{
+  int i;
+  int start;
+
+  dtostrf(val, DISPLAYDIGITS, precision, buffer);
+  start = DISPLAYDIGITS - precision - 1;
+
+  for (i = 0; i < DISPLAYDIGITS; i++) {
+    if (buffer[i] != ' ') {              // If we have a digit character
+      if (buffer[i + 1] == '.') {        // Need a decimal point?
+        lc.setDigit(0, start--, buffer[i] - '0', true);   // Yes
+        i++;
+      } else {
+        lc.setDigit(0, start--, buffer[i] - '0', false);  // No
+      }
+    } else {
+      start--;
+    }
   }
 }
